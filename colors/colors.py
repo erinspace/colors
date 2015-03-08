@@ -1,3 +1,4 @@
+import random
 import hashlib
 import colorsys
 
@@ -79,6 +80,37 @@ def save_html_page():
             if idx == 100:
                 break
         f.write('</body></html>')
+
+
+def color_too_close(color, colors, threshold=100):
+    """
+    For the random_color function, calculates the distance between
+    two colors and returns False if they are closer than the threshold
+    """
+    for x in colors:
+        distance = sum(abs(x[i] - color[i]) for i in xrange(3))
+        if distance < threshold:
+            return True
+    return False
+
+
+def random_color(seed=4545, max_iterations=15, threshold=100):
+    """
+    A Generator for random hex colors.
+    Generates a sequence of colors that are different up to some threshold
+    """
+    random.seed(seed)
+    colors = []
+    iterations = 0
+    while True:
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        if color_too_close(color, colors, threshold) and not iterations > max_iterations:
+            iterations += 1
+            continue
+        else:
+            colors.append(color)
+            iterations = 0
+        yield webcolors.rgb_to_hex(color)
 
 
 if __name__ == "__main__":
