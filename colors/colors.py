@@ -1,6 +1,7 @@
 import random
 import hashlib
 import colorsys
+import copy
 
 import webcolors
 
@@ -20,8 +21,9 @@ def word_to_color(word):
     return rgb
 
 
-def generate_color(initial_color_list):
-    colors_to_generate = initial_color_list
+def generate_color():
+    # TODO - this might not be the optimal way - copy is expensive
+    colors_to_generate = copy.copy(COLORBREWER_COLORS)
     colors_used = []
 
     while True:
@@ -32,7 +34,6 @@ def generate_color(initial_color_list):
             new_colors = get_new_colors(colors_used)
             colors_to_generate = new_colors
             colors_used = []
-
         yield webcolors.rgb_to_hex(color)
 
 
@@ -43,11 +44,9 @@ def calculate_distance_between_colors(color1, color2):
 
 
 def get_new_colors(colors_used):
-    """ Take a list of colors and generate a new list of colors with
-    the averages of the original colors in the list """
     new_colors = []
     for i in xrange(len(colors_used) - 1):
-        new_colors.append(calculate_distance_between_colors(colors_used[i], colors_used[i+1]))
+        new_colors.append(calculate_distance_between_colors(colors_used[i], colors_used[i + 1]))
 
     return new_colors
 
