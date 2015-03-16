@@ -112,6 +112,26 @@ def random_color(seed=4545, max_iterations=15, threshold=100):
         yield webcolors.rgb_to_hex(color)
 
 
+# @chrisseto's super fast color generaor!
+def colors(number):
+    palette = COLORBREWER_COLORS
+    while number > len(palette):
+        new_palette = []
+        color1 = palette[0]
+        for color2 in palette[1:]:
+            new_palette.extend((color1,
+            (
+                (color1[0] + color2[0]) / 2,
+                (color1[1] + color2[1]) / 2,
+                (color1[2] + color2[2]) / 2,
+            ),
+            color2))
+            color1 = color2
+        palette = new_palette
+
+    return palette
+
+
 if __name__ == "__main__":
     for i in xrange(5):
         color = generate_color(COLORBREWER_COLORS)
